@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function CreateStudent() {
@@ -7,24 +7,21 @@ function CreateStudent() {
     const [name, setName] = useState("")
     const [course, setCourse] = useState("")
     const [ira, setIRA] = useState(0)
+    const navigate = useNavigate()
 
     const handleSubmit = (event) => {
         event.preventDefault()
 
         const newStudent = { name, course, ira }
-        axios.post('http://localhost:3001/students', newStudent)
-            .then(
-                (res) => {
-                    console.log(res.data.id)
-                }
-            )
-            .catch(
-                (error) => {
-                    console.log(error)
-                }
-            )
-
-
+        //axios.post('http://localhost:3001/students', newStudent)
+        axios.post('http://localhost:3002/crud/students/create', newStudent)
+            .then((res) => {
+                    console.log(res.data._id)
+                    alert(`Aluno ${name} criado com sucesso.`)
+                    navigate("/listStudent")
+                })
+            .catch((error) => {console.log(error)})
+        
         console.log(name)
         console.log(course)
         console.log(ira)

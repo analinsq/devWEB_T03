@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var StudentService = require('../../services/student/StudentService');
+var StudentService = require('../../services/student/StudentServices');
 
 router.get(
     '/list',

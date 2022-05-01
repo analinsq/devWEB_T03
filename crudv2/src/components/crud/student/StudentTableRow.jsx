@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-const StudentTableRow = ({student}) => {
-    const { _id, name, course, ira } = student
+const StudentTableRow = (props) => {
+    const {_id,name,course,ira} = props.student
 
-     function deleteStudent() {
+    function deleteStudent() {
         if (window.confirm(`Deseja excluir o elemento de ID: ${_id}?`)) {
+            //axios.delete(`http://localhost:3001/students/${_id}`)
             axios.delete(`http://localhost:3002/crud/students/delete/${_id}`)
                 .then(response => props.deleteStudentById(_id))
                 .catch(error => console.log(error))
@@ -14,6 +16,7 @@ const StudentTableRow = ({student}) => {
     }
 
     return (
+        
         <tr>
             <td>
                 {_id}

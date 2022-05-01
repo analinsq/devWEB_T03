@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function EditProfessor(props) {
@@ -11,25 +11,25 @@ function EditProfessor(props) {
     const navigate = useNavigate();
 
     useEffect(
-            () => {
-                axios.get(`http://localhost:3001/professors/${params.id}`)
-                    .then(
-                        (response) => {
-                            //console.log(response.data)
-                            setName(response.data.name)
-                            setUniversity(response.data.university)
-                            setDegree(response.data.degree)
-                        }
-                    )
-                    .catch(error => console.log(error))
-            },
-            [params.id]
+        () => {
+            axios.get('http://localhost:3002/professors/' +params._id)
+                .then(
+                    (response) => {
+                        setName(response.data.name)
+                        setUniversity(response.data.university)
+                        setDegree(response.data.degree)
+                    }
+                )
+                .catch(error => console.log(error))
+        },
+        [params._id]
     )
 
     const handleSubmit = (event) => {
+
         event.preventDefault()
         const updatedProfessor = { name, university, degree }
-        axios.put(`http://localhost:3001/professors/${params.id}`, updatedProfessor)
+        axios.put(`http://localhost:3002/crud/professors/retrieve/${params._id}`, updatedProfessor)
             .then(response => navigate("/listProfessor"))
             .catch(error => console.log(error))
     }
@@ -50,7 +50,7 @@ function EditProfessor(props) {
                             onChange={(event) => { setName(event.target.value) }} />
                     </div>
                     <div className="form-group">
-                        <label>Universidade: </label>
+                        <label>Univers_idade: </label>
                         <input type="text"
                             className="form-control"
                             value={university ?? ""}

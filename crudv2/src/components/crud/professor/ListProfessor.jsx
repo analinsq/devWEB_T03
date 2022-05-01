@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 
 import ProfessorTableRow from "./ProfessorTableRow";
 
@@ -8,26 +8,31 @@ function ListProfessor() {
 
     const [professors, setProfessors] = useState([])
 
-    useEffect(
-        () => {
-            axios.get("http://localhost:3001/professors")
-                .then(
-                    (response) => {
-                        console.log(response.data)
-                    } 
-                )
-                .catch(
-                    (error) => console.log(error)
-            )
-        }, []
+    useEffect(()=>{
+          axios.get("http://localhost:3002/crud/professors/list")
+          .then((response)=>{setProfessors(response.data)})
+          .catch(error=>console.log(error))
+          
+        },
+        []
     )
 
-    function generateTable() {
+    function deleteProfessorById(_id) {
+        
+        let professorsTemp = professors
+        for(let i=0;i<professorsTemp.length;i++){
+            if(professorsTemp[i]._id === _id){
+                professorsTemp.splice(i,1)
+            }
+        }
+        setProfessors([...professorsTemp]) 
+    }
 
+    function generateTable() {
         if (!professors) return
         return professors.map(
             (professor, i) => {
-                return <ProfessorTableRow professor={professor} key={i} />
+                return <ProfessorTableRow professor={professor} key={i} deleteProfessorById={deleteProfessorById}/>
             }
         )
     }
@@ -45,7 +50,7 @@ function ListProfessor() {
                             <th>Nome</th>
                             <th>Universidade</th>
                             <th>Titulação</th>
-                            <th colSpan={2} style={{ textAlign: "center" }}>Ações</th>
+                            <th colSpan={2} style={{ textAlign: "center" }}></th>
                         </tr>
                     </thead>
                     <tbody>

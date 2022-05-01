@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-//import { students } from './data.js'
 
 function EditStudent(props) {
 
@@ -10,22 +9,17 @@ function EditStudent(props) {
     const [ira, setIRA] = useState(0)
     const params = useParams()
     const navigate = useNavigate()
-    
+
     useEffect(
-        () => {axios.get('http://localhost:3002/crud/students/retrieve/' + params.id)
-                .then(
-                    (res) => {
+        () => {
+            //axios.get('http://localhost:3001/students/' + params.id)
+            axios.get('http://localhost:3002/crud/students/retrieve/' + params.id)
+                .then((res) => {
                         setName(res.data.name)
                         setCourse(res.data.course)
                         setIRA(res.data.ira)
-                    }
-                )
-            
-                .catch(
-                    (error) => {
-                        console.log(error)
-                    }
-                )
+                    })
+                .catch((error) => {console.log(error)})
 
         },
         [params.id]
@@ -33,7 +27,9 @@ function EditStudent(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        const updatedStudent = {name, course, ira}
+        const updatedStudent = { name, course, ira }
+
+        //axios.put('http://localhost:3001/students/' + params.id, updatedStudent)
         axios.put('http://localhost:3002/crud/students/update/' + params.id, updatedStudent)
             .then(res => {navigate("/listStudent")})
             .catch(error => console.log(error))

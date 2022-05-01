@@ -10,7 +10,7 @@ let students = [
 
 let _id = 4
 
-class StudentService {
+class StudentServicelet {
 
     static create(data) {
         let student = new StudentModel(
@@ -59,10 +59,6 @@ class StudentService {
         return students
     }
 }
-       
-
-   
-
 
 module.exports = StudentServicelet 
 

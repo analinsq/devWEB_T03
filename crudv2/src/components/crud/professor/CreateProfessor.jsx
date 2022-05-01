@@ -1,18 +1,25 @@
-import axios from 'axios';
 import React, { useState } from 'react'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const CreateProfessor = () => {
     const [name, setName] = useState("")
     const [university, setUniversity] = useState("")
     const [degree, setDegree] = useState("Graduado")
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault()
+
         const newProfessor = { name, university, degree }
-        axios.post("http://localhost:3001/professors", newProfessor)
-            .then()
-            .catch(error => console.log(error))
+        axios.post("http://localhost:3002/crud/professors/create",newProfessor)
+        .then((response)=>{
+                console.log(response.data._id)
+                alert(`Professor ${name} criado com sucesso.`)
+                navigate("/listProfessor")
+            }
+        )
+        .catch(error=>console.log(error))
     }
 
     return (
