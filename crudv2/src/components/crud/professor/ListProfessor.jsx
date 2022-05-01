@@ -8,35 +8,26 @@ function ListProfessor() {
 
     const [professors, setProfessors] = useState([])
 
-    useEffect(        
-        ()=>{
-          axios.get("http://localhost:3001/professors")
-          .then(
-              (response)=>{
-                  setProfessors(response.data)
-              }
-          )
-          .catch(error=>console.log(error))
-        },
-        []
+    useEffect(
+        () => {
+            axios.get("http://localhost:3001/professors")
+                .then(
+                    (response) => {
+                        console.log(response.data)
+                    } 
+                )
+                .catch(
+                    (error) => console.log(error)
+            )
+        }, []
     )
-
-    function deleteProfessorById(id){
-        let professorsTemp = professors
-        for(let i=0;i<professorsTemp.length;i++){
-            if(professorsTemp[i].id === id){
-                professorsTemp.splice(i,1)
-            }
-        }
-        setProfessors([...professorsTemp])
-    }
 
     function generateTable() {
 
         if (!professors) return
         return professors.map(
             (professor, i) => {
-                return <ProfessorTableRow professor={professor} key={i} deleteProfessorById={deleteProfessorById}/>
+                return <ProfessorTableRow professor={professor} key={i} />
             }
         )
     }

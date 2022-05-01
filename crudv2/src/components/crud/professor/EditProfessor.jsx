@@ -1,17 +1,36 @@
-import axios from 'axios';
-import React, { useState } from 'react'
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
-const CreateProfessor = () => {
+function EditProfessor(props) {
+
     const [name, setName] = useState("")
     const [university, setUniversity] = useState("")
     const [degree, setDegree] = useState("Graduado")
+    const params = useParams()
+    const navigate = useNavigate();
+
+    useEffect(
+            () => {
+                axios.get(`http://localhost:3001/professors/${params.id}`)
+                    .then(
+                        (response) => {
+                            //console.log(response.data)
+                            setName(response.data.name)
+                            setUniversity(response.data.university)
+                            setDegree(response.data.degree)
+                        }
+                    )
+                    .catch(error => console.log(error))
+            },
+            [params.id]
+    )
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        const newProfessor = { name, university, degree }
-        axios.post("http://localhost:3001/professors", newProfessor)
-            .then()
+        const updatedProfessor = { name, university, degree }
+        axios.put(`http://localhost:3001/professors/${params.id}`, updatedProfessor)
+            .then(response => navigate("/listProfessor"))
             .catch(error => console.log(error))
     }
 
@@ -19,7 +38,7 @@ const CreateProfessor = () => {
         <>
             <main>
                 <h2>
-                    Criar Professor
+                    Editar Professor
                 </h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -47,7 +66,7 @@ const CreateProfessor = () => {
                             onChange={(event) => { setDegree(event.target.value) }} />
                     </div>
                     <div className="form-group" style={{ paddingTop: 20 }}>
-                        <input type="submit" value="Criar Professor" className="btn btn-primary" />
+                        <input type="submit" value="Atualizar Professor" className="btn btn-primary" />
                     </div>
                 </form>
             </main>
@@ -58,4 +77,4 @@ const CreateProfessor = () => {
     );
 }
 
-export default CreateProfessor
+export default EditProfessor

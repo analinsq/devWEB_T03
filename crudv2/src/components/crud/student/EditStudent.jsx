@@ -1,40 +1,49 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+//import { students } from './data.js'
 
-function CreateStudent() {
+function EditStudent(props) {
 
     const [name, setName] = useState("")
     const [course, setCourse] = useState("")
     const [ira, setIRA] = useState(0)
+    const params = useParams()
+    const navigate = useNavigate()
+    
+    useEffect(
+        () => {axios.get('http://localhost:3002/crud/students/retrieve/' + params.id)
+                .then(
+                    (res) => {
+                        setName(res.data.name)
+                        setCourse(res.data.course)
+                        setIRA(res.data.ira)
+                    }
+                )
+            
+                .catch(
+                    (error) => {
+                        console.log(error)
+                    }
+                )
+
+        },
+        [params.id]
+    )
 
     const handleSubmit = (event) => {
         event.preventDefault()
-
-        const newStudent = { name, course, ira }
-        axios.post('http://localhost:3001/students', newStudent)
-            .then(
-                (res) => {
-                    console.log(res.data.id)
-                }
-            )
-            .catch(
-                (error) => {
-                    console.log(error)
-                }
-            )
-
-
-        console.log(name)
-        console.log(course)
-        console.log(ira)
+        const updatedStudent = {name, course, ira}
+        axios.put('http://localhost:3002/crud/students/update/' + params.id, updatedStudent)
+            .then(res => {navigate("/listStudent")})
+            .catch(error => console.log(error))
     }
 
     return (
         <>
             <main>
                 <h2>
-                    Criar Estudante
+                    Editar Estudante
                 </h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -62,7 +71,7 @@ function CreateStudent() {
                             onChange={(event) => { setIRA(event.target.value) }} />
                     </div>
                     <div className="form-group" style={{ paddingTop: 20 }}>
-                        <input type="submit" value="Criar Estudante" className="btn btn-primary" />
+                        <input type="submit" value="Atualizar Estudante" className="btn btn-primary" />
                     </div>
                 </form>
             </main>
@@ -73,4 +82,4 @@ function CreateStudent() {
     );
 }
 
-export default CreateStudent
+export default EditStudent
