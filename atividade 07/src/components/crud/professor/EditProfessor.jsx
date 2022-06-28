@@ -4,7 +4,8 @@ import FirebaseContext from "../../../utils/FirebaseContext";
 import FirebaseProfessorService from "../../../services/professor/FirebaseProfessorService";
 import RestrictPage from "../../../utils/RestrictPage";
 
-const EditProfessor = ({ setShowToast, setToast }) => 
+
+const EditProfessorPage = ({ setShowToast, setToast }) => 
     <FirebaseContext.Consumer>
         {
             (firebase) => {
@@ -30,9 +31,11 @@ function EditProfessor(props) {
     const [validate, setValidate] = useState({ name: '', university: '', degree: '' })
     const [loading, setLoading] = useState(false)
 
+
     const validateFields = () => {
         setValidate({name: '', university: '', degree: ''})
         let res = true
+
         if(name === '' || university === '' || degree === '') {
             props.setToast({ header: 'Erro!', body: 'Preencha todos os campos.' })
             props.setShowToast(true)
@@ -44,15 +47,15 @@ function EditProfessor(props) {
             if(university === '') validateObj.university = 'is-invalid'
             setValidate(validateObj)
         }
+
         return res
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
         setLoading(true)
-
         if(!validateFields()) return
-        
+    
         const updatedProfessor = {name, university, degree}
         FirebaseProfessorService.update(
             props.firebase.getFirestoreDb(),

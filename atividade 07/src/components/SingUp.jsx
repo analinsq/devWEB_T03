@@ -18,6 +18,7 @@ function SignUp(props) {
     const [password, setPassword] = useState('')
     const [repassword, setRepassword] = useState('')
     const [loading, setLoading] = useState(false)
+    
     const [validate,setValidate] = useState({login:'',password:'',repassword:''})
     const navigate = useNavigate()
 
@@ -45,6 +46,8 @@ function SignUp(props) {
             if(repassword === '') validateObj.repassword = 'is-invalid'
             setValidate(validateObj)
         }
+
+         
         return res
     }
 
@@ -63,6 +66,7 @@ function SignUp(props) {
                     props.setLogged(true)
                     navigate('/listStudent')
                 } else {
+                    // alerta para dados incorretos
                     props.setToast({header:'Erro!',body:content})
                     props.setShowToast(true)
                     setLoading(false)

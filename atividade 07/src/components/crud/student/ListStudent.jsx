@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import StudentTableRow from "./StudentTableRow";
 import FirebaseContext from "../../../utils/FirebaseContext";
-import FirebaseStudentService from "../../../services/FirebaseStudentService";
+import FirebaseService from "../../../services/student/FirebaseStudentServices";
 import RestrictPage from "../../../utils/RestrictPage";
 
 const ListStudentPage = ({ setShowToast, setToast }) =>
@@ -11,7 +11,7 @@ const ListStudentPage = ({ setShowToast, setToast }) =>
             (firebase) => {
                 return (
                     <RestrictPage isLogged={firebase.getUser() != null}>
-                        <ListStudent 
+                        <ListStudent
                             firebase={firebase}
                             setShowToast={setShowToast}
                             setToast={setToast} />
@@ -28,65 +28,66 @@ function ListStudent(props) {
 
     useEffect(
         () => {
+
             setLoading(true)
-            FirebaseStudentService.list_onSnapshot(
+            FirebaseService.list(
                 props.firebase.getFirestoreDb(),
                 (students) => {
                     setLoading(false)
                     setStudents(students)
                 }
             )
-        },[props.firebase]
+        }
+        ,
+        [props.firebase]
     )
 
     function deleteStudentById(_id) {
         let studentsTemp = students
-        for (let i = 0; i < studentsTemp.length; i++) {
-            if (studentsTemp[i]._id === _id) {
+        for (let i = 0; i < studentsTemp.length; i++)
+            if (studentsTemp[i]._id === _id)
                 studentsTemp.splice(i, 1)
-            }
-        }
-        setStudents([...studentsTemp]) 
+
+        setStudents([...studentsTemp])
     }
 
     function renderTable() {
-
-        if (loading) {  
+        if (loading) {
             return (
                 <div style={{
-                    display:'flex',
-                    flexDirection:'column',
-                    justifyContent:'center',
-                    alignItems:'center',
-                    padding:100
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 100
                 }}>
-                    <div className="spinner-border" 
-                     style={{width: '3rem', height: '3rem'}} 
-                     role="status" />
-                     Carregando...
+                    <div className="spinner-border"
+                        style={{ width: '3rem', height: '3rem' }}
+                        role="status" />
+                    Carregando...
                 </div>
             )
         }
-
         return (
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Curso</th>
-                        <th>IRA</th>
-                        <th>Nome</th>
-                        <th colSpan={2} style={{ textAlign: "center" }}></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {renderTableBody()}
-                </tbody>
-            </table>
+        <table className="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Curso</th>
+                    <th>IRA</th>
+                    <th colSpan={2} style={{ textAlign: "center" }}>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {generateTable()}
+            </tbody>
+        </table>
         )
     }
 
-    function renderTableBody() {
+    function generateTable() {
+
         if (!students) return
         return students.map(
             (student, i) => {
@@ -104,16 +105,16 @@ function ListStudent(props) {
 
     return (
         <>
-        <main>
-            <h2>
-                Listar Estudantes
-            </h2>
+            <main>
+                <h2>
+                    Listar Estudantes
+                </h2>
                 {renderTable()}
-        </main>
-        
-        <nav>
-            <Link to="/">Home</Link>
-        </nav>
+            </main>
+            <nav>
+                <Link to="/" class="btn btn-outline-success">Home</Link>
+            </nav>
+
         </>
     );
 }

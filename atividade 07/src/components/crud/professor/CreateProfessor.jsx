@@ -1,14 +1,10 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
-
-
-//Firebase
 import FirebaseContext from '../../../utils/FirebaseContext';
 import FirebaseProfessorService from '../../../services/professor/FirebaseProfessorService';
 import RestrictPage from '../../../utils/RestrictPage';
 
-const CreateProfessor = ({ setShowToast, setToast }) =>
+const CreateProfessorPage = ({ setShowToast, setToast }) =>
     <FirebaseContext.Consumer>
         {(firebase) => {
             return (
@@ -21,7 +17,8 @@ const CreateProfessor = ({ setShowToast, setToast }) =>
             )
         }
 
-        }
+    }
+
     </ FirebaseContext.Consumer>
 
 function CreateProfessor(props) {
@@ -30,7 +27,6 @@ function CreateProfessor(props) {
     const [university, setUniversity] = useState("")
     const [degree, setDegree] = useState("")
     const navigate = useNavigate()
-
     const [validate, setValidate] = useState({ name: '', university: '', degree: '' })
     const [loading, setLoading] = useState(false)
 
@@ -38,6 +34,7 @@ function CreateProfessor(props) {
     const validateFields = () => {
         let res = true
         setValidate({ name: '', university: '', degree: '', })
+
         if (name === '' || university === '' || degree === '') {
             props.setToast({ header: 'Erro!', body: 'Preencha todos os campos' })
             props.setShowToast(true)
@@ -55,9 +52,10 @@ function CreateProfessor(props) {
     const handleSubmit = (event) => {
         event.preventDefault()
         setLoading(true)
-        if (!validateFields()) return
-        const newProfessor = {name, university, degree}
 
+        if (!validateFields()) return
+
+        const newProfessor = { name, university, degree }
         FirebaseProfessorService.create(
             props.firebase.getFirestoreDb(),
             () => {

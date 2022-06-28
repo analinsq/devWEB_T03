@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+
 import ProfessorTableRow from "./ProfessorTableRow";
+
+
+//Firebase
 import FirebaseContext from "../../../utils/FirebaseContext";
 import FirebaseProfessorService from "../../../services/professor/FirebaseProfessorService";
 import RestrictPage from "../../../utils/RestrictPage";
 
-const ListProfessor = ({ setShowToast, setToast }) => 
+const ListProfessorPage = ({ setShowToast, setToast }) => 
 <FirebaseContext.Consumer>
 {
     (firebase) => {
@@ -28,6 +33,7 @@ function ListProfessor(props) {
     
     useEffect(
         () => {
+            // Firebase
             setLoading(true)
             FirebaseProfessorService.list(
                 props.firebase.getFirestoreDb(),
@@ -37,8 +43,7 @@ function ListProfessor(props) {
                 }
             )
         }
-        ,
-        [props.firebase]
+        ,[props.firebase]
     )
 
     function deleteProfessorById(_id){
@@ -111,9 +116,7 @@ function ListProfessor(props) {
                 </h2>
                 {renderTable()}
             </main>
-            <nav>
-                <Link to="/" class="btn btn-outline-success">Home</Link>
-            </nav>
+
         </>
     );
 }
